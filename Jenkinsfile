@@ -1,5 +1,3 @@
-//Deepika Tendulkar , Sanjana Vegesna
-//Clones a repository, checks Docker version, builds and pushes a Docker image to Docker Hub with versioning, and deploys it to GKE using GCP credentials.
 pipeline {
     agent any
     environment {
@@ -17,15 +15,16 @@ pipeline {
         stage('Check Docker Version') {
             steps {
                 script {
-                    sh 'docker --version'
+                    // Use Docker Pipeline plugin to verify docker version
+                    docker.version()
                 }
             }
         }
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Add cache busting to ensure files are updated
-                    def cacheBust = System.currentTimeMillis() // Use current timestamp as cache buster
+                    // Build the Docker image using the Docker Pipeline plugin
+                    def cacheBust = System.currentTimeMillis() // Cache busting
                     dockerImage = docker.build("${registry}:${env.BUILD_NUMBER}", "--build-arg CACHEBUST=${cacheBust} .")
                 }
             }
@@ -33,6 +32,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
+                    // Push the Docker image using the Docker Pipeline plugin
                     docker.withRegistry('https://index.docker.io/v1/', registryCredential) {
                         dockerImage.push("latest")
                         dockerImage.push("${env.BUILD_NUMBER}")
@@ -43,16 +43,16 @@ pipeline {
         stage('Deploy to GKE') {
             steps {
                 script {
+                    // Use the GCP service account to authenticate with Google Cloud
                     withCredentials([file(credentialsId: gcpServiceAccount, variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-                        sh '''
-                        export GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS
-                        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-                        gcloud config set project ${gcpProject}  # Set the GCP project
-                        gcloud container clusters get-credentials cluster-1 --zone us-central1-c
-                        kubectl apply -f deployment.yaml || { echo 'Deployment failed' ; exit 1; }
-                        kubectl apply -f service.yaml || { echo 'Service application failed' ; exit 1; }
-                        kubectl delete pod -l app=student-survey-app || { echo 'Failed to delete pods' ; exit 1; }
-                        '''
+                        // Configure the GKE plugin to authenticate with GCP and deploy to GKE
+                        gkeCluster(name: 'cluster-1', projectId: gcpProject, zone: 'us-central1-c', credentialsId: gcpServiceAccount) {
+                            kubernetesDeploy(
+                                kubeconfigId: 'gcp-k8s-key',
+                                configs: ['deployment.yaml', 'service.yaml'],
+                                enableConfigSubstitution: true
+                            )
+                        }
                     }
                 }
             }
