@@ -15,8 +15,8 @@ pipeline {
         stage('Check Docker Version') {
             steps {
                 script {
-                    // Use Docker Pipeline plugin to verify docker version
-                    docker.version()
+                    // Bypass Docker Pipeline plugin method and use shell to check Docker version
+                    sh 'docker --version'
                 }
             }
         }
