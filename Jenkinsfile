@@ -49,9 +49,12 @@ pipeline {
                         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
                         gcloud config set project ${gcpProject}  # Set the GCP project
                         gcloud container clusters get-credentials cluster-1 --zone us-central1-c
+                        sed -i "s|image: sanjanavegesna/student-survey-app:v1|image: sanjanavegesna/student-survey-app:${env.BUILD_NUMBER}|g" deployment.yaml
+                        
                         kubectl apply -f deployment.yaml || { echo 'Deployment failed' ; exit 1; }
                         kubectl apply -f service.yaml || { echo 'Service application failed' ; exit 1; }
-                       
+                        kubectl delete pods -l app=student-survey-app || { echo 'Failed to delete pods' ; exit 1; }
+                     
                         '''
                     }
                 }
