@@ -1,8 +1,0 @@
-/Users/sanju/Documents/SWE645/student-survey/src/main/java/com/myproject/studentsurvey/StudentSurveyApplication.java
-/Users/sanju/Documents/SWE645/student-survey/src/main/java/com/myproject/studentsurvey/controller/SurveyController.java
-/Users/sanju/Documents/SWE645/student-survey/src/main/java/com/myproject/studentsurvey/exception/GlobalExceptionHandler.java
-/Users/sanju/Documents/SWE645/student-survey/src/main/java/com/myproject/studentsurvey/exception/ResourceNotFoundException.java
-/Users/sanju/Documents/SWE645/student-survey/src/main/java/com/myproject/studentsurvey/model/survey.java
-/Users/sanju/Documents/SWE645/student-survey/src/main/java/com/myproject/studentsurvey/repository/SurveyRepository.java
-/Users/sanju/Documents/SWE645/student-survey/src/main/java/com/myproject/studentsurvey/service/Impl/SurveyServiceImpl.java
-/Users/sanju/Documents/SWE645/student-survey/src/main/java/com/myproject/studentsurvey/service/SurveyService.java
