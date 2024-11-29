@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-survey-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: student-survey-app
+  template:
+    metadata:
+      labels:
+        app: student-survey-app
+    spec:
+      containers:
+      - name: student-survey-app
+        image: sanjanavegesna/student-survey-app:v1
+        ports:
+        - containerPort: 8080
