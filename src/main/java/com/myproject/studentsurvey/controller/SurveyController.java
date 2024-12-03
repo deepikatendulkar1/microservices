@@ -47,7 +47,7 @@ public class SurveyController {
         return ResponseEntity.ok(survey);
     }
 
-    /**
+    /***
      * Get all surveys
      *
      * @return A list of all surveys
