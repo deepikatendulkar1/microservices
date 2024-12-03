@@ -20,7 +20,7 @@ public class SurveyController {
         this.surveyService = surveyService;
     }
 
-    /**
+    /***
      * Create a new survey
      *
      * @param survey The survey object to be created
